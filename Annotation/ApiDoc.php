@@ -78,6 +78,11 @@ class ApiDoc
      */
     private $route;
 
+	/**
+	 * @var array
+	 */
+	private $accessControl = array();
+
     public function __construct(array $data)
     {
         if (isset($data['input'])) {
@@ -102,6 +107,10 @@ class ApiDoc
         if (isset($data['return'])) {
             $this->return = $data['return'];
         }
+
+		if (isset($data['access_control'])) {
+			$this->accessControl = $data['access_control'];
+		}
 
         $this->isResource = isset($data['resource']) && $data['resource'];
     }
@@ -272,6 +281,26 @@ class ApiDoc
             $data['response'] = $response;
         }
 
+		if($accessControl = $this->accessControl) {
+			$data['access_control'] = $accessControl;
+		}
+
         return $data;
     }
+
+	/**
+	 * @param array $accessControl
+	 */
+	public function setAccessControl($accessControl)
+	{
+		$this->accessControl = $accessControl;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAccessControl()
+	{
+		return $this->accessControl;
+	}
 }

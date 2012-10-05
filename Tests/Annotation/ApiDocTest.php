@@ -138,6 +138,28 @@ class ApiDocTest extends TestCase
         $this->assertNull($annot->getInput());
     }
 
+	public function testConstructMethodHasAccessControl()
+	{
+		$data = array(
+			'resource' => true,
+			'description' => 'test',
+			'access_control' => array('ROLE_USER', 'ROLE_ADMIN')
+		);
+
+		$annot = new ApiDoc($data);
+		$array = $annot->toArray();
+
+		$this->assertTrue(is_array($array));
+		$this->assertTrue(is_array($array['access_control']));
+		$this->assertCount(2, $array['access_control']);
+		$this->assertContains('ROLE_USER', $array['access_control']);
+		$this->assertContains('ROLE_ADMIN', $array['access_control']);
+
+		$this->assertTrue($annot->isResource());
+		$this->assertEquals($data['description'], $array['description']);
+		$this->assertNull($annot->getInput());
+	}
+
     /**
      * @expectedException \InvalidArgumentException
      */
