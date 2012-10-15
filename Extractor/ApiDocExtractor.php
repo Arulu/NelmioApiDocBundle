@@ -86,12 +86,15 @@ class ApiDocExtractor
         foreach ($this->getRoutes() as $route) {
             if ($method = $this->getReflectionMethod($route->getDefault('_controller'))) {
                 if ($annotation = $this->reader->getMethodAnnotation($method, self::ANNOTATION_CLASS)) {
-                    if ($annotation->isResource()) {
-                        // remove format from routes used for resource grouping
-                        $resources[] = str_replace('.{_format}', '', $route->getPattern());
-                    }
+					if($annotation->hasRole($this->container->get('security.context')->getToken()->getUser()->getRoles()))
+					{
+						if ($annotation->isResource()) {
+							// remove format from routes used for resource grouping
+							$resources[] = str_replace('.{_format}', '', $route->getPattern());
+						}
 
-                    $array[] = array('annotation' => $this->extractData($annotation, $route, $method));
+						$array[] = array('annotation' => $this->extractData($annotation, $route, $method));
+					}
                 }
             }
         }

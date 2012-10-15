@@ -303,4 +303,18 @@ class ApiDoc
 	{
 		return $this->accessControl;
 	}
+
+	public function hasRole($roles)
+	{
+		if(is_string($this->accessControl))
+			$this->accessControl = array($this->accessControl);
+
+		foreach($roles as $role)
+		{
+			if(in_array($role, $this->accessControl))
+				return true;
+		}
+
+		return false;
+	}
 }
